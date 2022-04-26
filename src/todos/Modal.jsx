@@ -1,8 +1,11 @@
 /** @format */
 
 import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addTodo, updateTodo } from "../redux/reducers/todoSlice";
 
-function Modal({ modal, Modaltitle, setShow, setTodos, todos, id }) {
+function Modal({ modal, Modaltitle, setShow, todos, id }) {
+	const dispatch = useDispatch();
 	const [intialTodos, setIntialTodo] = React.useState({
 		id: "",
 		title: "",
@@ -21,28 +24,25 @@ function Modal({ modal, Modaltitle, setShow, setTodos, todos, id }) {
 	const savetodos = () => {
 		// console.log(title, description, completed);
 		if (id) {
-			setTodos(
-				todos.map((todo) =>
-					todo.id === id
-						? {
-								...todo,
-								title: intialTodos.title,
-								description: intialTodos?.description,
-						  }
-						: todo,
-				),
+			dispatch(
+				updateTodo({
+					id: id,
+					title: intialTodos?.title,
+					description: intialTodos?.description,
+					completed: intialTodos?.completed,
+				}),
 			);
 		} else {
-			setTodos([
-				...todos,
-				{
+			dispatch(
+				addTodo({
 					id: todos.length + 1,
 					title: intialTodos?.title,
 					description: intialTodos?.description,
 					completed: intialTodos?.completed,
-				},
-			]);
+				}),
+			);
 		}
+		setShow(false);
 	};
 	return (
 		<div className={`modal-show`}>
@@ -85,10 +85,15 @@ function Modal({ modal, Modaltitle, setShow, setTodos, todos, id }) {
 								})
 							}
 						/>
-						<input type='button' value='save' onClick={(e) => savetodos(e)} />
+						<input
+							type='button'
+							className='btn-submit'
+							value={id ? "UPDATE" : "SAVE"}
+							onClick={(e) => savetodos(e)}
+						/>
 					</div>
 					<div className='modal-footer'>
-						<h1>Modal footer</h1>
+						<h1>@SOFTPRODIGY</h1>
 					</div>
 				</div>
 			</div>

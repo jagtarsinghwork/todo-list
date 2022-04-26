@@ -1,6 +1,8 @@
 /** @format */
 
 import React from "react";
+import { deleteTodo } from "../redux/reducers/todoSlice";
+import { useDispatch } from "react-redux";
 
 function TodoList({ todos, setTodos, setShow, setId }) {
 	const handleDeleteTodos = (id) => {
@@ -8,6 +10,7 @@ function TodoList({ todos, setTodos, setShow, setId }) {
 		setTodos(todos.filter((todo) => todo.id !== id));
 	};
 	// const [show, setShow] = React.useState(false);
+	const dispatch = useDispatch();
 	const openDialogBox = (id) => {
 		console.log(id);
 		setId(id);
@@ -17,7 +20,7 @@ function TodoList({ todos, setTodos, setShow, setId }) {
 	return (
 		<div>
 			<ul className='todo-list-conatiner'>
-				{todos.map((todo) => (
+				{todos?.map((todo) => (
 					<li key={todo.id}>
 						<div>
 							<p>{todo?.id}</p>
@@ -26,7 +29,8 @@ function TodoList({ todos, setTodos, setShow, setId }) {
 							<p>{todo?.title}</p>
 						</div>
 						<div>
-							<button onClick={() => handleDeleteTodos(todo?.id)}>
+							<button
+								onClick={() => dispatch(deleteTodo({ id: todo?.id }))}>
 								Delete
 							</button>
 						</div>

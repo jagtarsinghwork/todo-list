@@ -1,29 +1,31 @@
 /** @format */
 
-import { createStore } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
+import redcuers from "./redux/reducers";
+// Or from '@reduxjs/toolkit/query/react'
+import { setupListeners } from "@reduxjs/toolkit/query";
+import { pokemonApi } from "./services/pokemon";
 
-function counterReducer(state = { value: 0 }, action) {
-	switch (action.type) {
-		case "INCREMENT":
-			return { value: state.value + 1 };
-		case "DECREMENT":
-			return { value: state.value - 1 };
-		default:
-			return state;
-	}
-}
+export const store = configureStore({
+	reducer: {
+		...redcuers,
+		// Add the generated reducer as a specific top-level slice
+		[pokemonApi.reducerPath]: pokemonApi.reducer,
+	},
+	// Adding the api middleware enables caching, invalidation, polling,
+	// and other useful features of `rtk-query`.
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat(pokemonApi.middleware),
+});
 
-// Its API is { subscribe, dispatch, getState }.
-let store = createStore(counterReducer);
-
-store.subscribe(() => console.log(store.getState()));
+// store.subscribe(() => console.log(store.getState()));
 // The only way to mutate the internal state is to dispatch an action.
 // The actions can be serialized, logged or stored and later replayed.
-store.dispatch({ type: "counter/incremented" });
+// store.dispatch({ type: "counter/incremented" });
 // {value: 1}
-store.dispatch({ type: "counter/incremented" });
+// store.dispatch({ type: "counter/incremented" });
 // {value: 2}
-store.dispatch({ type: "counter/decremented" });
+// store.dispatch({ type: "counter/decremented" });
 // {value: 1}
 
 export default store;

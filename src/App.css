@@ -199,3 +199,11 @@ input {
 	letter-spacing: 0.5px;
 	cursor: pointer;
 }
+
+.btn-submit {
+	padding: 10px;
+	border-radius: 5px;
+	background-color: #1b3d43;
+	color: white;
+	box-shadow: 0 0 10px #ffffff;
+}
