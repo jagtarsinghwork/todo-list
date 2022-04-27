@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { deleteTodo } from "../redux/reducers/todoSlice";
+import { deleteTodo, updateTodo } from "../redux/reducers/todoSlice";
 import { useDispatch } from "react-redux";
 
 function TodoList({ todos, setTodos, setShow, setId }) {
@@ -12,9 +12,11 @@ function TodoList({ todos, setTodos, setShow, setId }) {
 	// const [show, setShow] = React.useState(false);
 	const dispatch = useDispatch();
 	const openDialogBox = (id) => {
-		console.log(id);
 		setId(id);
 		setShow(true);
+	};
+	const hanleMarkAsCompleted = (e, id) => {
+		dispatch(updateTodo({ id: id, completed: e.target.checked }));
 	};
 
 	return (
@@ -23,6 +25,15 @@ function TodoList({ todos, setTodos, setShow, setId }) {
 				{todos?.map((todo) => (
 					<li key={todo.id}>
 						<div>
+							<div>
+								<input
+									type='checkbox'
+									value={todo.completed}
+									onChange={(e) => {
+										hanleMarkAsCompleted(e, todo.id);
+									}}
+								/>
+							</div>
 							<p>{todo?.id}</p>
 						</div>
 						<div>
